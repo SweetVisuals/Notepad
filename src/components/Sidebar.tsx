@@ -178,62 +178,86 @@ export default function Sidebar({
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: Math.min(index * 0.02, 0.2) }}
-                        className={`group relative rounded p-4 flex flex-col gap-1 transition-all cursor-pointer border ${
-                          isActive
-                            ? 'bg-white border-gray-200 ring-1 ring-black/5 shadow-xs'
-                            : 'bg-transparent border-transparent hover:bg-white hover:border-gray-150'
-                        }`}
-                        onClick={() => {
-                          onSelectNote(note.id);
-                          // Close sidebar on small viewports
-                          if (window.innerWidth < 640) {
-                            onClose();
-                          }
-                        }}
+                        className="relative overflow-hidden rounded-lg bg-red-50"
                       >
-                        {/* Note Header Title and Toggle Buttons */}
-                        <div className="flex justify-between items-start gap-2">
-                          <h4 className={`text-sm font-medium truncate ${isActive ? 'text-black font-semibold' : 'text-[#1A1A1A]'}`}>
-                            {note.title.trim() === '' ? 'Untitled' : note.title}
-                          </h4>
+                        {/* Red Delete Background */}
+                        <div
+                          onClick={() => onDeleteToggle(note)}
+                          className="absolute inset-y-0 right-0 w-24 bg-red-600 text-white flex items-center justify-center gap-1.5 cursor-pointer z-0 rounded-r-lg"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 text-white" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-white">Delete</span>
+                        </div>
 
-                          {/* Quick Actions (Visually secondary) */}
-                          <div className="flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onArchiveToggle(note);
-                              }}
-                              className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-[#1A1A1A] transition-colors cursor-pointer"
-                              title={note.is_archived ? 'Restore context' : 'Send to Archive'}
-                            >
-                              <Archive className="w-3 h-3" />
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onDeleteToggle(note);
-                              }}
-                              className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-red-600 transition-colors cursor-pointer"
-                              title={note.is_deleted ? 'Put back' : 'Send to Trash'}
-                            >
-                              <Trash2 className="w-3 h-3" />
-                            </button>
+                        {/* Draggable Note Card */}
+                        <motion.div
+                          drag="x"
+                          dragDirectionLock
+                          dragConstraints={{ left: -96, right: 0 }}
+                          dragElastic={{ left: 0.1, right: 0.05 }}
+                          onDragEnd={(event, info) => {
+                            // If swiped left significantly (more than 60px), trigger delete
+                            if (info.offset.x < -60) {
+                              onDeleteToggle(note);
+                            }
+                          }}
+                          className={`relative z-10 p-4 flex flex-col gap-1 transition-all cursor-pointer bg-white border ${
+                            isActive
+                              ? 'border-gray-200 ring-1 ring-black/5 shadow-xs font-semibold'
+                              : 'border-transparent hover:border-gray-150'
+                          } rounded-lg select-none`}
+                          onClick={() => {
+                            onSelectNote(note.id);
+                            // Close sidebar on small viewports
+                            if (window.innerWidth < 640) {
+                              onClose();
+                            }
+                          }}
+                        >
+                          {/* Note Header Title and Toggle Buttons */}
+                          <div className="flex justify-between items-start gap-2">
+                            <h4 className={`text-sm font-medium truncate ${isActive ? 'text-black font-semibold' : 'text-[#1A1A1A]'}`}>
+                              {note.title.trim() === '' ? 'Untitled' : note.title}
+                            </h4>
+
+                            {/* Quick Actions (Visually secondary) */}
+                            <div className="flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onArchiveToggle(note);
+                                }}
+                                className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-[#1A1A1A] transition-colors cursor-pointer"
+                                title={note.is_archived ? 'Restore context' : 'Send to Archive'}
+                              >
+                                <Archive className="w-3 h-3" />
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onDeleteToggle(note);
+                                }}
+                                className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-red-600 transition-colors cursor-pointer"
+                                title={note.is_deleted ? 'Put back' : 'Send to Trash'}
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
+                            </div>
                           </div>
-                        </div>
 
-                        {/* Text Snippet view */}
-                        <p className="text-xs text-gray-500 line-clamp-1 leading-relaxed">
-                          {note.content.trim() === '' ? 'Empty thoughts draft...' : note.content}
-                        </p>
+                          {/* Text Snippet view */}
+                          <p className="text-xs text-gray-500 line-clamp-1 leading-relaxed">
+                            {note.content.trim() === '' ? 'Empty thoughts draft...' : note.content}
+                          </p>
 
-                        {/* Footer details */}
-                        <div className="mt-2 pt-2 border-t border-gray-150 text-[9px] font-mono text-gray-400 flex items-center justify-between uppercase tracking-wider">
-                          <span>{formatFriendlyDate(note.updated_at || note.created_at)}</span>
-                          <span className="flex items-center gap-1 font-sans text-[8px] font-bold">
-                            EDIT DRAFT
-                          </span>
-                        </div>
+                          {/* Footer details */}
+                          <div className="mt-2 pt-2 border-t border-gray-150 text-[9px] font-mono text-gray-400 flex items-center justify-between uppercase tracking-wider">
+                            <span>{formatFriendlyDate(note.updated_at || note.created_at)}</span>
+                            <span className="flex items-center gap-1 font-sans text-[8px] font-bold">
+                              EDIT DRAFT
+                            </span>
+                          </div>
+                        </motion.div>
                       </motion.div>
                     );
                   })}
