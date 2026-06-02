@@ -1,0 +1,6 @@
+{
+  "name": "Sync Notes",
+  "description": "A full-screen mobile-first note-taking web app syncing in real-time with Supabase.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
