@@ -15,8 +15,6 @@ interface SidebarProps {
   onSelectNote: (id: string) => void;
   filter: NoteFilter;
   onFilterChange: (filter: NoteFilter) => void;
-  syncCode: string;
-  onSyncCodeChange: (newCode: string) => void;
   onNewNote: () => void;
   onArchiveToggle: (note: Note) => void;
   onDeleteToggle: (note: Note) => void;
@@ -30,31 +28,11 @@ export default function Sidebar({
   onSelectNote,
   filter,
   onFilterChange,
-  syncCode,
-  onSyncCodeChange,
   onNewNote,
   onArchiveToggle,
   onDeleteToggle
 }: SidebarProps) {
   const [search, setSearch] = useState('');
-  const [tempSyncCode, setTempSyncCode] = useState(syncCode);
-  const [isEditingSync, setIsEditingSync] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  // Sync code submit handler
-  const handleSyncSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (tempSyncCode.trim()) {
-      onSyncCodeChange(tempSyncCode.trim().toUpperCase());
-      setIsEditingSync(false);
-    }
-  };
-
-  const handleCopySyncCode = () => {
-    navigator.clipboard.writeText(syncCode);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   // Filter notes based on general states
   const filteredNotes = notes.filter(note => {
@@ -264,76 +242,8 @@ export default function Sidebar({
             </div>
 
             {/* Sticky Sync Management Block */}
-            <div className="p-5 bg-white border-t border-gray-250 shrink-0">
-              <div className="flex items-center justify-between mb-3 text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]">
-                <span className="flex items-center gap-1.5">
-                  <Settings className="w-3.5 h-3.5 text-gray-400" />
-                  <span>Synchronisation</span>
-                </span>
-                {/* Status Indicator */}
-                <span className="text-[8px] font-mono font-bold bg-[#FAF9F6] border border-gray-200 px-1.5 py-0.5 rounded text-[#4A4A4A]">
-                  ACTIVE
-                </span>
-              </div>
-
-              <div className="space-y-2">
-                {!isEditingSync ? (
-                  <div className="flex items-center justify-between bg-[#FAF9F6] border border-gray-200 p-2.5 rounded">
-                    <span className="font-mono text-xs font-bold text-[#1A1A1A]">{syncCode}</span>
-                    <div className="flex items-center gap-2">
-                      {/* Copy Sync Code button */}
-                      <button
-                        onClick={handleCopySyncCode}
-                        className="p-1 rounded hover:bg-gray-200/50 text-gray-500 hover:text-black transition-all cursor-pointer"
-                        title="Copy Sync Code to Clipboard"
-                      >
-                        {copied ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        ) : (
-                          <Copy className="w-3.5 h-3.5" />
-                        )}
-                      </button>
-                      {/* Change sync code button */}
-                      <button
-                        onClick={() => {
-                          setTempSyncCode(syncCode);
-                          setIsEditingSync(true);
-                        }}
-                        className="text-[9px] font-bold uppercase tracking-wider text-black underline hover:text-gray-700 cursor-pointer"
-                      >
-                        Edit
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSyncSubmit} className="flex gap-1.5">
-                    <input
-                      type="text"
-                      value={tempSyncCode}
-                      onChange={(e) => setTempSyncCode(e.target.value)}
-                      placeholder="SYNC-XXXXX"
-                      className="flex-1 bg-white border border-gray-300 rounded py-1 px-2.5 text-xs font-mono font-bold uppercase outline-none focus:border-black"
-                    />
-                    <button
-                      type="submit"
-                      className="px-3 bg-black text-white hover:bg-gray-800 rounded text-[9px] font-bold uppercase tracking-widest cursor-pointer"
-                    >
-                      Connect
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIsEditingSync(false)}
-                      className="px-2 bg-gray-150 text-gray-600 hover:bg-gray-200 rounded text-xs cursor-pointer"
-                    >
-                      X
-                    </button>
-                  </form>
-                )}
-
-                <p className="text-[10px] text-gray-400 leading-relaxed font-sans">
-                  Paste this Sync Code in another device or smartphone to synchronise edit drafts jointly in real-time.
-                </p>
-              </div>
+            <div className="p-5 bg-white border-t border-gray-200 shrink-0 text-center text-[10px] text-gray-400 font-sans tracking-wide">
+              <span>Private Notepad Portal</span>
             </div>
           </motion.aside>
         </>

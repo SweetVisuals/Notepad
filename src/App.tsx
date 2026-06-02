@@ -20,14 +20,8 @@ function generateUUID(): string {
 }
 
 export default function App() {
-  // Syncing states
-  const [syncCode, setSyncCode] = useState<string>(() => {
-    const saved = localStorage.getItem('notes_sync_code');
-    if (saved) return saved;
-    const fresh = generateSyncCode();
-    localStorage.setItem('notes_sync_code', fresh);
-    return fresh;
-  });
+  // Syncing states - Hardcoded private sync ID for private default syncing
+  const syncCode = "PRIVATE_NOTEBOOK";
 
   // App core states
   const [notes, setNotes] = useState<Note[]>([]);
@@ -405,17 +399,6 @@ Double-click standard inputs or click the note body below to start drafting imme
     }
   };
 
-  const handleSyncCodeChange = (newCode: string) => {
-    // Clear all active timers before changing context
-    Object.values(saveTimeoutRef.current).forEach(clearTimeout);
-    saveTimeoutRef.current = {};
-
-    setSyncCode(newCode);
-    localStorage.setItem('notes_sync_code', newCode);
-    setNotes([]);
-    setActiveNoteId(null);
-  };
-
   const handleNotesSelect = (id: string) => {
     setActiveNoteId(id);
     // If selecting an archived or trash note, automatically switch our view folder to preview correctly
@@ -473,8 +456,6 @@ Double-click standard inputs or click the note body below to start drafting imme
             onSelectNote={handleNotesSelect}
             filter={filter}
             onFilterChange={setFilter}
-            syncCode={syncCode}
-            onSyncCodeChange={handleSyncCodeChange}
             onNewNote={handleNewNote}
             onArchiveToggle={handleArchiveToggle}
             onDeleteToggle={handleDeleteToggle}

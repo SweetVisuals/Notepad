@@ -192,7 +192,7 @@ export default function NoteEditor({
               value={note.title}
               onChange={(e) => onUpdate(e.target.value, note.content)}
               placeholder="Note Title"
-              className="w-full text-4xl sm:text-5xl font-serif italic mb-6 focus:outline-none placeholder-gray-300 text-[#1A1A1A] bg-transparent border-none outline-none focus:ring-0 leading-tight"
+              className="w-full text-2xl sm:text-3xl font-serif italic mb-6 focus:outline-none placeholder-gray-300 text-[#1A1A1A] bg-transparent border-none outline-none focus:ring-0 leading-tight"
             />
 
             {/* Editorial Line divider */}
@@ -204,7 +204,7 @@ export default function NoteEditor({
               onChange={(e) => onUpdate(note.title, e.target.value)}
               placeholder="Start writing your thoughts..."
               spellCheck="false"
-              className="w-full flex-1 text-lg sm:text-xl font-serif leading-relaxed text-[#4A4A4A] placeholder-gray-300 border-none outline-none focus:ring-0 bg-transparent resize-none min-h-[420px] h-full pb-16"
+              className="w-full flex-1 text-base sm:text-lg font-serif leading-relaxed text-[#4A4A4A] placeholder-gray-300 border-none outline-none focus:ring-0 bg-transparent resize-none min-h-[420px] h-full pb-16"
             />
 
             {/* Footer metrics info row */}
